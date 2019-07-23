@@ -1,0 +1,15 @@
+- hosts: localhost
+  tasks:
+    - debug:
+        msg: play1
+
+- name: Include first play
+  import_playbook: install_docker.yml
+
+- hosts: localhost
+  tasks:
+    - debug:
+        msg: play2
+
+- name: Include second play
+  import_playbook: deploy_secure_registry.yml
