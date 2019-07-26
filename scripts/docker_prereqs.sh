@@ -2,7 +2,8 @@
 
 
 # Formatting variables
-	dot=$(systemctl status smb | head -n 1  | cut -d " " -f 1)
+	damon=$(systemctl list-unit-files | grep enabled | head -n 1 | awk '{print $1}')
+	dot=$(systemctl status $damon | head -n 1  | cut -d " " -f 1)
 	wid=$(tput cols)
 	total=$(( $wid - 23 ))
 	SUCCESS=$(tput setaf 2; tput bold; echo "SUCCESS")
