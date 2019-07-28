@@ -1,5 +1,13 @@
 #!/bin/bash
 
+clear
+echo -e \\n
+read -sp "Please enter the ansible user password:  " PASSWORD
+echo -e \\n
+export PASSWORD=$PASSWORD
+
+sudo echo ""
+
 
 # Formatting variables
 	export damon=$(systemctl list-unit-files | grep enabled | head -n 1 | awk '{print $1}')
@@ -8,7 +16,11 @@
 	export total=$(( $wid - 23 ))
 	export SUCCESS=$(tput setaf 2; tput bold; echo "SUCCESS")
 	export FAIL=$(tput setaf 1; tput bold; echo "FAIL")
+
+# General Variables
 	export fail_log=/tmp/fail_log.txt
+	export script_dir=`pwd`
+
 
 
 function Print-Message () 
@@ -108,15 +120,27 @@ function Unpack-Tars ()
 function Call-Openssl ()
 	{
 		
-		sudo /home/ansible/registry-maker/scripts/create_certs.sh
+		sudo -S $PASSWORD /home/ansible/registry-maker/scripts/create_certs.sh
 	}
 
 
 ##2. Run the ansible plays
 function Ansible-Plays ()
 	{
-		ansible-playbook /home/ansible/registry-maker/registry-maker.yml -i /home/ansible/registry-maker/hosts -b -K
-	}
+		tput bold; echo -e \\n"Untar Needed Files"\\n; tput sgr0
+		tags=(create_install_directory copy_installers install_docker-ce start_docker_daemon create_docker_user update_user_paths)
+
+		for tag in "${tags[@]}"; do
+			message="Untar deploy_secure_registry role"
+			len=$(echo $message | wc -c)
+			difference=$(( $total - $len - 7 ))
+			
+			ansible-playbook $script_dir/install_docker.yml -i $script_dir/install_inventory.ini -b --extra-vars '$PASSWORD' --tags $tag
+		done
+	
+
+
+}
 	
 ## 3. Run the docker/apache setup script
 function Container-Setup ()
@@ -163,14 +187,14 @@ else
 		scripts/install_prereqs.sh
 	
 fi
-exit
 
-
-# Call the openssl function 
-Call-Openssl
 
 # Call the Ansible-Plays function
 Ansible-Plays
+exit
+
+# Call the openssl function 
+Call-Openssl
 
 # Call the Container-Setup function
 Container-Setup
