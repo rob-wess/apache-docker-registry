@@ -2,13 +2,13 @@
 
 
 # Formatting variables
-	damon=$(systemctl list-unit-files | grep enabled | head -n 1 | awk '{print $1}')
-	dot=$(systemctl status $damon | head -n 1  | cut -d " " -f 1)
-	wid=$(tput cols)
-	total=$(( $wid - 23 ))
-	SUCCESS=$(tput setaf 2; tput bold; echo "SUCCESS")
-	FAIL=$(tput setaf 1; tput bold; echo "FAIL")
-	fail_log=/tmp/fail_log.txt
+	export damon=$(systemctl list-unit-files | grep enabled | head -n 1 | awk '{print $1}')
+	export dot=$(systemctl status $damon | head -n 1  | cut -d " " -f 1)
+	export wid=$(tput cols)
+	export total=$(( $wid - 23 ))
+	export SUCCESS=$(tput setaf 2; tput bold; echo "SUCCESS")
+	export FAIL=$(tput setaf 1; tput bold; echo "FAIL")
+	export fail_log=/tmp/fail_log.txt
 
 
 function Print-Message () 
@@ -18,7 +18,7 @@ function Print-Message ()
 		 v=$(printf "%-${num}s" "$str")
 		 echo -e "\t$3 $4 ${v// /.} $5"
 	}
-
+export -f Print-Message
 
 function Check-Host ()
 	{
@@ -139,6 +139,9 @@ function Fail-Exit ()
 # Clear the log file
 echo > $fail_log
 
+#Unpack tar files
+Unpack-Tars
+
 #Run the Check-Host function and exit if any fails
 Check-Host 
 if [[ "$host_status" == "prepped" ]]; then
@@ -160,10 +163,6 @@ else
 		scripts/install_prereqs.sh
 	
 fi
-exit
-
-#Unpack tar files
-Unpack-Tars
 exit
 
 
