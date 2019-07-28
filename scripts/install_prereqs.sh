@@ -8,7 +8,8 @@ message="Install ansible via rpm"
 len=$(echo $message | wc -c)
 difference=$(( $total - $len - 7 ))
 
-if (sudo rpm -ivh  $PWD/deploy_secure_registry/files/ansible-2.8.1-1.el7.noarch.rpm &> /dev/null); then
+#if (sudo -S $PASSWORD rpm -ivh  $script_dir/deploy_secure_registry/files/ansible-2.8.1-1.el7.noarch.rpm &> /dev/null); then
+if (sudo rpm -ivh  $script_dir/deploy_secure_registry/files/ansible-2.8.1-1.el7.noarch.rpm &> /dev/null); then
 	Print-Message " " $difference $dot "$message" "$SUCCESS" && tput sgr0; echo -e \\n
 else
 	Print-Message " " $difference $dot "$message" "$FAIL" && tput sgr0; echo -e \\n
