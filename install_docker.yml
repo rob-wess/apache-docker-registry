@@ -1,6 +1,9 @@
 - name: Install docker and docker-ce 
   hosts: localhost
   gather_facts: false
+  become: true
+  vars: 
+    - ansible_sudo_pass: SUDO_PASSWORD
   roles: 
     - install_docker
  
