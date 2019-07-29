@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ "ansible_installed" == "0" ]]; then
+if [[ "$ansible_installed" == "0" ]]; then
 
 
 tput bold; echo -e \\n"Install Pre-requisites"\\n; tput sgr0
