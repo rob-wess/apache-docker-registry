@@ -40,7 +40,7 @@ function Check-Host ()
 		message="Check ansible is installed"
 		len=$(echo $message | wc -c)
 		difference=$(( $total - $len - 7 ))
-		if [ -f /bin/ansible/ ]; then
+		if [ ! -f /bin/ansible/ ]; then
 			export ansible_installed="1"
 			Print-Message " " $difference $dot "$message" "$SUCCESS" && tput sgr0
 		else
@@ -54,7 +54,7 @@ function Check-Host ()
 		message="Check docker is installed"
 		len=$(echo $message | wc -c)
 		difference=$(( $total - $len - 7 ))
-		if [ -f /bin/docker/ ]; then
+		if [ ! -f /bin/docker/ ]; then
 			export docker_installed="1"
 			Print-Message " " $difference $dot "$message" "$SUCCESS" && tput sgr0
 		else
@@ -127,15 +127,24 @@ function Call-Openssl ()
 ##2. Run the ansible plays
 function Ansible-Plays ()
 	{
-		tput bold; echo -e \\n"Untar Needed Files"\\n; tput sgr0
+		tput bold; echo -e \\n"Run Ansible Plays"\\n; tput sgr0
 		tags=(create_install_directory copy_installers install_docker-ce start_docker_daemon create_docker_user update_user_paths)
 
 		for tag in "${tags[@]}"; do
-			message="Untar deploy_secure_registry role"
+			message="Run ansible play $tag"
 			len=$(echo $message | wc -c)
 			difference=$(( $total - $len - 7 ))
 			
-			ansible-playbook $script_dir/install_docker.yml -i $script_dir/install_inventory.ini -b --extra-vars '$PASSWORD' --tags $tag
+			if (ansible-playbook $script_dir/install_docker.yml -i $script_dir/install_inventory.ini -b --extra-vars "ansible_sudo_pass=$PASSWORD" --tags $tag &> /dev/null); then
+				Print-Message " " $difference $dot "$message" "$SUCCESS" && tput sgr0
+				echo -e "\t\tCMD: ansible-playbook $script_dir/install_docker.yml -i $script_dir/install_inventory.ini -b --extra-vars "ansible_sudo_pass=$PASSWORD" --tags $tag &> /dev/null "\\n 
+			else
+				Print-Message " " $difference $dot "$message" "$FAIL" && tput sgr0
+				echo -e "\tCHECK: $message" >> $fail_log
+				echo -e "\t\tRESULT:ansible play $tag failed"\\n >> $fail_log
+				echo -e "\t\tCMD:ansible-playbook $script_dir/install_docker.yml -i $script_dir/install_inventory.ini -b --extra-vars '$PASSWORD' --tags $tag"\\n >> $fail_log
+			fi
+	
 		done
 	
 
