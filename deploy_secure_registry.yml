@@ -1,4 +1,5 @@
 - name: Deploy secure offline registry
   hosts: localhost
+  gather_facts: false
   roles:
     - deploy_secure_registry
