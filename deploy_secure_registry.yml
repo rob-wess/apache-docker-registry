@@ -1,5 +1,9 @@
 - name: Deploy secure offline registry
   hosts: localhost
   gather_facts: false
+  become: true
+  vars:
+    - ansible_sudo_pass: 1234qwer!@#$QWER    # The installer_main.sh seds this with the users' input
+
   roles:
     - deploy_secure_registry
