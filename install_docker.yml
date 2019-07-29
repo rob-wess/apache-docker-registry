@@ -3,7 +3,7 @@
   gather_facts: false
   become: true
   vars: 
-    - ansible_sudo_pass: SUDO_PASSWORD
+    - ansible_sudo_pass: SUDO_PASSWORD    # The installer_main.sh seds this with the users' input
   roles: 
     - install_docker
  
