@@ -1,12 +1,5 @@
 #!/bin/bash
 
-clear
-echo -e \\n
-read -sp "Please enter the ansible user password:  " PASSWORD
-echo -e \\n
-export PASSWORD=$PASSWORD
-
-sudo echo ""
 
 
 # Formatting variables
@@ -128,21 +121,22 @@ function Call-Openssl ()
 function Ansible-Plays ()
 	{
 		tput bold; echo -e \\n"Run Ansible Plays"\\n; tput sgr0
-		tags=(create_install_directory copy_installers install_docker-ce start_docker_daemon create_docker_user update_user_paths)
+		tags=(create_install_directory copy_installers install_docker-compose install_docker_ce start_docker_daemon create_docker_user update_user_paths)
 
 		for tag in "${tags[@]}"; do
 			message="Run ansible play $tag"
 			len=$(echo $message | wc -c)
 			difference=$(( $total - $len - 7 ))
 			
-			if (ansible-playbook $script_dir/install_docker.yml -i $script_dir/install_inventory.ini -b --extra-vars "ansible_sudo_pass=$PASSWORD" --tags $tag &> /dev/null); then
+			if (ansible-playbook $script_dir/install_docker.yml -i $script_dir/install_inventory --tags $tag &> /dev/null); then
 				Print-Message " " $difference $dot "$message" "$SUCCESS" && tput sgr0
-				echo -e "\t\tCMD: ansible-playbook $script_dir/install_docker.yml -i $script_dir/install_inventory.ini -b --extra-vars "ansible_sudo_pass=$PASSWORD" --tags $tag &> /dev/null "\\n 
+				echo -e "\t\tCMD: ansible-playbook $script_dir/install_docker.yml -i $script_dir/install_inventory -b --tags $tag &> /dev/null "\\n 
 			else
 				Print-Message " " $difference $dot "$message" "$FAIL" && tput sgr0
+				echo -e "\t\tCMD: ansible-playbook $script_dir/install_docker.yml -i $script_dir/install_inventory -b --tags $tag &> /dev/null "\\n 
 				echo -e "\tCHECK: $message" >> $fail_log
 				echo -e "\t\tRESULT:ansible play $tag failed"\\n >> $fail_log
-				echo -e "\t\tCMD:ansible-playbook $script_dir/install_docker.yml -i $script_dir/install_inventory.ini -b --extra-vars '$PASSWORD' --tags $tag"\\n >> $fail_log
+				echo -e "\t\tCMD:ansible-playbook $script_dir/install_docker.yml -i $script_dir/install_inventory -b --tags $tag"\\n >> $fail_log
 			fi
 	
 		done
@@ -171,6 +165,13 @@ function Fail-Exit ()
 
 # Clear the log file
 echo > $fail_log
+clear
+echo -e \\n
+read -sp "Please enter the ansible user password:  " PASSWORD
+echo -e \\n
+export PASSWORD=$PASSWORD
+sed -i "s(SUDO_PASSWORD("$PASSWORD"(g" $script_dir/install_docker.yml
+sudo echo ""
 
 #Unpack tar files
 Unpack-Tars
