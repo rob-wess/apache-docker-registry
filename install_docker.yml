@@ -1,5 +1,6 @@
 - name: Install docker and docker-ce 
   hosts: localhost
+  gather_facts: false
   roles: 
     - install_docker
  
