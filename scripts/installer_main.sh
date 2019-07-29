@@ -33,7 +33,7 @@ function Check-Host ()
 		message="Check ansible is installed"
 		len=$(echo $message | wc -c)
 		difference=$(( $total - $len - 7 ))
-		if [ -f /bin/ansible ] || [ -f /usr/bin/ansible ]; then
+		if [ -f /usr/bin/ansible/ ] || [ -f /bin/ansible ]; then
 			export ansible_installed="1"
 			Print-Message " " $difference $dot "$message" "$SUCCESS" && tput sgr0
 		else
@@ -47,7 +47,7 @@ function Check-Host ()
 		message="Check docker is installed"
 		len=$(echo $message | wc -c)
 		difference=$(( $total - $len - 7 ))
-		if [ -f /bin/docker ] || [ -f /usr/bin/docker ]; then
+		if [ -f /bin/docker/ ] || [ -f /usr/bin/docker ]; then
 			export docker_installed="1"
 			Print-Message " " $difference $dot "$message" "$SUCCESS" && tput sgr0
 		else
@@ -118,9 +118,9 @@ function Call-Openssl ()
 
 
 ##2. Run the ansible plays
-function Ansible-Plays ()
+function Install-Docker ()
 	{
-		tput bold; echo -e \\n"Run Ansible Plays"\\n; tput sgr0
+		tput bold; echo -e \\n"Run install_docker.yml Plays"\\n; tput sgr0
 		tags=(create_install_directory copy_installers install_docker-compose install_docker_ce start_docker_daemon create_docker_user update_user_paths)
 
 		for tag in "${tags[@]}"; do
@@ -140,8 +140,35 @@ function Ansible-Plays ()
 			fi
 	
 		done
-	
+	}
+function Deploy-Registry ()
+	{
 
+		tput bold; echo -e \\n"Run deploy_secure_registry.yml Plays"\\n; tput sgr0
+		tags=(install_apcache_tools make_data_dir copy_docker_images load_registry_image load_apache_image copy_setup_script update_host_file update_selinux apply_selinux_rules)
+
+
+		for tag in "${tags[@]}"; do
+			message="Run ansible play $tag"
+			len=$(echo $message | wc -c)
+			difference=$(( $total - $len - 7 ))
+			
+			#if (ansible-playbook $script_dir/deploy_secure_registry.yml -i $script_dir/install_inventory --tags $tag &> /dev/null); then
+			ansible-playbook $script_dir/deploy_secure_registry.yml -i $script_dir/install_inventory --tags $tag &> /dev/null
+			if [[ $? == "0" ]]; then
+				Print-Message " " $difference $dot "$message" "$SUCCESS" && tput sgr0
+				echo -e "\t\tCMD: ansible-playbook $script_dir/deploy_secure_registry.yml -i $script_dir/install_inventory -b --tags $tag &> /dev/null "\\n 
+			elif [[ $? == "2" ]]; then
+				Print-Message " " $difference $dot "$message" "$FAIL" && tput sgr0
+				echo -e "\t\tCMD: ansible-playbook $script_dir/deploy_secure_registry.yml -i $script_dir/install_inventory -b --tags $tag &> /dev/null "\\n 
+				echo -e "\tCHECK: $message" >> $fail_log
+				echo -e "\t\tRESULT:ansible play $tag failed"\\n >> $fail_log
+				echo -e "\t\tCMD:ansible-playbook $script_dir/deploy_secure_registry.yml -i $script_dir/install_inventory -b --tags $tag"\\n >> $fail_log
+			else 
+				Print-Message " " $difference $dot "$message" "$FAIL" && tput sgr0
+				echo -e "\t\tCMD: ansible-playbook $script_dir/deploy_secure_registry.yml -i $script_dir/install_inventory -b --tags $tag &> /dev/null "\\n 
+			fi
+		done
 
 }
 	
@@ -185,6 +212,7 @@ if [[ "$host_status" == "prepped" ]]; then
 	echo -e \\n"The system is ready for installation and deployment of the secured registry container."\\n
 	tput sgr0
 	read -p "Press enter to continue or Ctrl+c to exit"
+	Deploy-Registry
 else
 	tput bold; tput setaf 1; tput smul
 	echo -e \\n"Host does not have all pre-reqs installed"
@@ -195,12 +223,12 @@ else
 	read -p "Press enter to continue or Ctrl+c to exit"
 	
 		scripts/install_prereqs.sh
+		Install-Docker
+		Deploy-Registry
 	
 fi
 
 
-# Call the Ansible-Plays function
-Ansible-Plays
 exit
 
 # Call the openssl function 
