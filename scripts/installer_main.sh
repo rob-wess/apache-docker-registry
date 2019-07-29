@@ -33,7 +33,7 @@ function Check-Host ()
 		message="Check ansible is installed"
 		len=$(echo $message | wc -c)
 		difference=$(( $total - $len - 7 ))
-		if [ ! -f /bin/ansible/ ]; then
+		if [ -f /bin/ansible/ ]; then
 			export ansible_installed="1"
 			Print-Message " " $difference $dot "$message" "$SUCCESS" && tput sgr0
 		else
@@ -47,7 +47,7 @@ function Check-Host ()
 		message="Check docker is installed"
 		len=$(echo $message | wc -c)
 		difference=$(( $total - $len - 7 ))
-		if [ ! -f /bin/docker/ ]; then
+		if [ -f /bin/docker/ ]; then
 			export docker_installed="1"
 			Print-Message " " $difference $dot "$message" "$SUCCESS" && tput sgr0
 		else
@@ -61,7 +61,7 @@ function Check-Host ()
 		message="Check docker-compose is installed"
 		len=$(echo $message | wc -c)
 		difference=$(( $total - $len - 7 ))
-		if [ ! -f /usr/local/bin/docker-compose ]; then
+		if [ -f /usr/local/bin/docker-compose ]; then
 			export docker_compose_installed="1"
 			Print-Message " " $difference $dot "$message" "$SUCCESS" && tput sgr0
 		else
