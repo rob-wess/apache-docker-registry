@@ -1,0 +1,65 @@
+- name: Install packages for added security
+  yum:
+    name: httpd-tools
+
+- name: Make data directory
+  file:
+    path: /data
+    state: directory
+    owner: docker
+    group: docker
+    mode: '0655'
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: docker
+    group: docker
+    mode: '0755'
+  loop:
+    - /data/images
+    - /home/docker/docker-registry/
+
+- name: Copy docker images to remote machine
+  copy:
+    src: "{{ item }}"
+    dest: /data/images
+    owner: docker
+    group: docker
+    mode: '0755'
+  loop:
+    - httpd_offline.tar
+    - registry_offline.tar
+
+- name: Load registry image
+  shell: docker load --input /data/images/registry_offline.tar
+
+- name: Load apache image
+  shell: docker load --input /data/images/httpd_offline.tar
+
+- name: Copy docker-setup script to machine
+  copy:
+    src: docker-setup.sh
+    dest: /home/docker/docker-registry/docker-setup.sh
+    state: directory
+    owner: docker
+    group: docker
+    mode: '0755'
+
+- name: Update the local host file
+  lineinfile:
+    path: /etc/hosts
+    regexp: '^127\.0\.0\.1'
+    line:  127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4  myregistrydomain.com    {{ registry_ip }}
+    owner: root
+    group: root
+    mode: '0644' 
+
+- name: Add selinux rule
+  sefcontext:
+    target: '/home/docker/docker-registry/data(/.*)?'
+    setype: httpd_config_t
+    state: present
+
+- name: Apply rule
+  command: restorecon -irv /home/docker/docker-registry/data/
+    
