@@ -4,6 +4,7 @@
   become: true
   vars:
     - ansible_sudo_pass: SUDO_PASSWORD    # The installer_main.sh seds this with the users' input
+    - registry_ip: REGISTRY_IP
 
   roles:
     - deploy_secure_registry
