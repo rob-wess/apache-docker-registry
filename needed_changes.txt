@@ -1,3 +1,3 @@
 - Add httpd-tools rpm to the install_docker_ce role. Currently, it uses yum
 
-- Separate the 'Run deploy_secure_registry Plays' into a separate function in insterller_main.sh
+- Update installer_main.sh to handle previous versions of ansible. If installed, ansible should not be less than 2.8. Add logic to handle if it is...
