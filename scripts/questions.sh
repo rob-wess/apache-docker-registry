@@ -26,9 +26,5 @@ read -p "Common Name (eg, your name or your server's hostname) []:  " COMMON_NAM
 #read -p "Email Address []:  " EMAIL
 
 
-#echo "The subject for your cert creation script is as follows..."
-#echo "-subj /C=$COUNTRY/ST=$STATE/L=$CITY/O=$ORGANIZATION/OU=$UNIT/CN=$COMMON_NAME"
-subj=\"""/C=$COUNTRY/ST=$STATE/L=$CITY/O=$ORGANIZATION/OU=$UNIT/CN=$COMMON_NAME"\""
-
-
+subj="/C=$COUNTRY/ST=$STATE/L=$CITY/O=$ORGANIZATION/OU=$UNIT/CN=$COMMON_NAME"
 
