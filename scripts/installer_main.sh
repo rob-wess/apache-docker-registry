@@ -16,6 +16,12 @@
 
 
 
+source $script_dir/scripts/questions.sh
+export subj=$subj
+$script_dir/scripts/create_certs.sh
+exit
+
+
 function Print-Message () 
 	{
 		 str=$1
@@ -83,11 +89,11 @@ function Unpack-Tars ()
 	{
 		tput bold; echo -e \\n"Untar Needed Files"\\n; tput sgr0
 		
-		message="Untar install_docker_ce role"
+		message="Untar registry_image.tar.gz"
 		len=$(echo $message | wc -c)
 		difference=$(( $total - $len - 7 ))
 
-		if (tar -xzvf $PWD/install_docker_ce.tar.gz &> /dev/null); then
+		if (tar -xzvf $PWD/registry_image.tar.gz &> /dev/null); then
 			Print-Message " " $difference $dot "$message" "$SUCCESS" && tput sgr0
 		else
 			Print-Message " " $difference $dot "$message" "$FAIL" && tput sgr0
@@ -96,11 +102,11 @@ function Unpack-Tars ()
 		fi
 
 		
-		message="Untar deploy_secure_registry role"
+		message="Untar httpd_offline.tar.gz"
 		len=$(echo $message | wc -c)
 		difference=$(( $total - $len - 7 ))
 			
-		if (tar -xzvf $PWD/deploy_secure_registry.tar.gz &> /dev/null); then
+		if (tar -xzvf $PWD/httpd_offline.tar.gz &> /dev/null); then
 			Print-Message " " $difference $dot "$message" "$SUCCESS" && tput sgr0
 		else
 			Print-Message " " $difference $dot "$message" "$FAIL" && tput sgr0
@@ -194,11 +200,12 @@ function Fail-Exit ()
 echo > $fail_log
 clear
 echo -e \\n
-read -sp "Please enter the ansible user password:  " PASSWORD
+#read -sp "Please enter the ansible user password:  " PASSWORD
 echo -e \\n
 export PASSWORD=$PASSWORD
-sed -i "s(SUDO_PASSWORD("$PASSWORD"(g" $script_dir/install_docker.yml
-sudo echo ""
+#sed -i "s(SUDO_PASSWORD("$PASSWORD"(g" $script_dir/install_docker.yml
+#sudo echo ""
+
 
 #Unpack tar files
 Unpack-Tars
@@ -212,6 +219,8 @@ if [[ "$host_status" == "prepped" ]]; then
 	echo -e \\n"The system is ready for installation and deployment of the secured registry container."\\n
 	tput sgr0
 	read -p "Press enter to continue or Ctrl+c to exit"
+	$script_dir/scripts/questions.sh
+	exit
 	Deploy-Registry
 else
 	tput bold; tput setaf 1; tput smul
@@ -222,9 +231,11 @@ else
 	echo -e \\n"We'll call the installer scripts now"\\n
 	read -p "Press enter to continue or Ctrl+c to exit"
 	
-		scripts/install_prereqs.sh
-		Install-Docker
-		Deploy-Registry
+		$script_dir/scripts/questions.sh
+		exit
+		$script_dir/scripts/install_prereqs.sh
+		#Install-Docker
+		#Deploy-Registry
 	
 fi
 
