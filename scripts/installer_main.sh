@@ -18,7 +18,7 @@
 
 source $script_dir/scripts/questions.sh
 export subj=$subj
-$script_dir/scripts/create_certs.sh
+sudo -E $script_dir/scripts/create_certs.sh
 exit
 
 
