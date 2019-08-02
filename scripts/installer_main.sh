@@ -19,8 +19,6 @@
 source $script_dir/scripts/questions.sh
 export subj=$subj
 sudo -E $script_dir/scripts/create_certs.sh
-exit
-
 
 function Print-Message () 
 	{
@@ -87,7 +85,7 @@ function Check-Host ()
 	
 function Unpack-Tars ()
 	{
-		tput bold; echo -e \\n"Untar Needed Files"\\n; tput sgr0
+		tput bold; echo -e \\n"Untar Docker Images"\\n; tput sgr0
 		
 		message="Untar registry_image.tar.gz"
 		len=$(echo $message | wc -c)
@@ -219,9 +217,7 @@ if [[ "$host_status" == "prepped" ]]; then
 	echo -e \\n"The system is ready for installation and deployment of the secured registry container."\\n
 	tput sgr0
 	read -p "Press enter to continue or Ctrl+c to exit"
-	$script_dir/scripts/questions.sh
-	exit
-	Deploy-Registry
+		Deploy-Registry
 else
 	tput bold; tput setaf 1; tput smul
 	echo -e \\n"Host does not have all pre-reqs installed"
@@ -230,21 +226,12 @@ else
 	tput sgr0
 	echo -e \\n"We'll call the installer scripts now"\\n
 	read -p "Press enter to continue or Ctrl+c to exit"
-	
-		$script_dir/scripts/questions.sh
-		exit
 		$script_dir/scripts/install_prereqs.sh
-		#Install-Docker
-		#Deploy-Registry
-	
+		Install-Docker
+		Deploy-Registry
 fi
 
-
 exit
-
-# Call the openssl function 
-Call-Openssl
-
 # Call the Container-Setup function
 Container-Setup
 
