@@ -2,6 +2,29 @@
   yum:
     name: httpd-tools
 
+- name: Create Directory for http
+  file:
+    path: /home/docker/docker-registry/auth
+    state: directory
+    owner: docker
+    group: docker
+    mode: '0655'
+  file:
+    path: /home/docker/docker-registry/auth
+    state: directory
+    owner: docker
+    group: docker
+    mode: '0655'
+
+- name: Install Apache template
+  template:
+    src: httpd.conf.j2
+    deest: /home/docker/docker-registry/auth
+    
+ - name: Copy certs and key to auth directory
+   shell: cp /home/docker/docker-registry/domain.crt /home/docker/docker-registry/auth/domain.crt
+   shell: cp /home/docker/docker-registry/domain.key /home/docker/docker-registry/auth/domain.key
+
 - name: Make data directory
   file:
     path: /data
