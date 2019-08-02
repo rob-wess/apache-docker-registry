@@ -37,7 +37,7 @@ Listen 5043
     Require all denied
 </Directory>
 <VirtualHost *:5043>
-  ServerName {{ registry_domain }}
+  ServerName {{ registry_domain_name }}
   SSLEngine on
   SSLCertificateFile /usr/local/apache2/conf/domain.crt
   SSLCertificateKeyFile /usr/local/apache2/conf/domain.key
