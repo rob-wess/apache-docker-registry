@@ -75,4 +75,7 @@
 - name: Apply rule
   command: restorecon -irv /home/docker/docker-registry/data/
   tags: apply_selinux_rules
-    
+  
+- name: Add apache user
+  shell: docker run --entrypoint htpasswd httpd:2.4 -Bbn {{ apcache_user }} {{ apache_}} > /home/docker/docker-registry/auth/httpd.htpasswd
+  tags: add_apache_user
