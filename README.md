@@ -17,6 +17,8 @@ This repo is designed to be used on an offline system. The repo contains all of 
   - Run 'docker-compose up' to start containers. Add -d option to start them detached.
   - Run 'docker login $registry_fqdn:5043' to test. 
   
+  It is recommended to change the ansible user's password after installation. This is echoed into multiple files in plain text. 
+  
   - Known Issues:
     - Authentication error when docker login is ran (see needed_changes.txt for more info)
     - docker-compose.yml uses the loopback address for the apache container. This can be changed to your public/internal IP
