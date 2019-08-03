@@ -38,7 +38,7 @@
   tags: load_apache_image
   
 - name: Copy apache configuration template to remote machine
-  tepmlate:
+  template:
     src: httpd.conf.j2
     dest: /home/docker/docker-registry/auth/httpd.conf
     owner: docker
