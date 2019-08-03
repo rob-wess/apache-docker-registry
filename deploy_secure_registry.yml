@@ -6,6 +6,8 @@
     - ansible_sudo_pass: SUDO_PASSWORD    # The installer_main.sh seds this with the users' input
     - registry_ip: REGISTRY_IP
     - registry_fqdn: REGISTRY_FQDN
+    - apache_user: APACHE_USER
+    - apache_password: APACHE_PASSWORD
 
   roles:
     - deploy_secure_registry
