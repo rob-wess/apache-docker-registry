@@ -1,15 +1,11 @@
 - Add httpd-tools rpm to the install_docker_ce role. Currently, it uses yum
 
 - Update installer_main.sh to handle previous versions of ansible. If installed, ansible should not be less than 2.8. Add logic to handle if it is...
-
-- Update deploy_secure_registry/files/docker-setup.sh. 
-    - Line 35: Do something with 'ServerAdmin'. May ask for it in 'questions.sh'
-    - Line 63: variablize domain
-    - Line 117: variable APACHE_USER and APACHE_PASSWORD 
-    - LIne 119: Comment it out
-    - Line 122: Not sure if we need an apache group
-    - LIne 132: Variablize to pull the local apache image
-    - Line 133: Use variablized hostname
-    - Line 142: Variablize to pull the local registry image
   
-  - Remove deploy_secure_registry/templates/registry.conf.j2. This is using the old nginx frontend. No longer needed.
+CURRENT STATUS
+The scripts and plays deploy successfully. However, the last task in deploy_secure_registry/tasks/main.yml, doesn't execute with the variables. Its supposed to echo {{ APACHE_USER }} and {{ APACHE_PASSWORD }} in auth/htpad.htpasswd but instead echoes literally (cat the file to see '{{ APACHE_USER }}:hash '). 
+
+After the installer runs, the user still needs to su to docker, cd into the home directory and run 'docker-compose up -d' to start the two containers. 
+
+They will also need to test authentication by running 'docker login {{ registry_fqdn }}:5043 with the apache username/password. 
+The httpd.conf also requires a group named 'developer' to push/put/delete/patch but there is no script/play to create the apache gorup file. 
