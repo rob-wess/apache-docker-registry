@@ -1,7 +1,8 @@
 # apache-docker-registry
 
 TESTED ONLY ON Cento 7.6.1810
-REFERENCES:
+
+- REFERENCES:
   - https://www.digitalocean.com/community/tutorials/how-to-set-up-a-private-docker-registry-on-ubuntu-14-04
   - https://docs.docker.com/registry/recipes/apache/
   
