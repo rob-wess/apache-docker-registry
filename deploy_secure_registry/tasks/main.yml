@@ -15,7 +15,6 @@
     - /home/docker/docker-registry/
     - /home/docker/docker-registry/auth
     - /home/docker/docker-registry/data
-    
   tags: make_data_dir
 
 - name: Copy docker images to remote machine
