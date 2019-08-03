@@ -77,5 +77,5 @@
   tags: apply_selinux_rules
   
 - name: Add apache user
-  shell: docker run --entrypoint htpasswd httpd:2.4 -Bbn {{ apcache_user }} {{ apache_}} > /home/docker/docker-registry/auth/httpd.htpasswd
+  shell: docker run --entrypoint htpasswd httpd:2.4 -Bbn {{ apache_user }} {{ apache_password }} > /home/docker/docker-registry/auth/httpd.htpasswd
   tags: add_apache_user
