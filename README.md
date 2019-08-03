@@ -1,5 +1,10 @@
 # apache-docker-registry
 
+TESTED ONLY ON Cento 7.6.1810
+REFERENCES:
+  - https://www.digitalocean.com/community/tutorials/how-to-set-up-a-private-docker-registry-on-ubuntu-14-04
+  - https://docs.docker.com/registry/recipes/apache/
+  
 The ansible plays will load and configure a docker registry container (using registry:2 from docker.io). An apache container will also be configured using the latest httpd image as a front end to handle basic authentication and TLS/SSL. 
 
 This repo is designed to be used on an offline system. The repo contains all of the images/packages needed. (Some might be missing but working to add them now).
