@@ -34,7 +34,6 @@
     mode: '0655'
   tags: install_docker-compose
         
-
 - name: Install docker-ce
   shell: yum -y --disablerepo=* localinstall /admin/installers/docker/*.rpm
   tags: install_docker_ce
