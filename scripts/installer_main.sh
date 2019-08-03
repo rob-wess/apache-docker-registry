@@ -150,7 +150,7 @@ function Deploy-Registry ()
 
 		tput bold; echo -e \\n"Run deploy_secure_registry.yml Plays"\\n; tput sgr0
 		
-		tags=(install_apcache_tools make_data_dir copy_docker_images load_registry_image load_apache_image copy_apache_template copy_docker_compose_template update_host_file update_selinux apply_selinux_rules)
+		tags=(install_apcache_tools make_data_dir copy_docker_images load_registry_image load_apache_image copy_apache_template copy_docker_compose_template update_host_file update_selinux apply_selinux_rules add_apache_user)
 		for tag in "${tags[@]}"; do
 			message="Run ansible play $tag"
 			len=$(echo $message | wc -c)
