@@ -39,7 +39,6 @@
   copy:
     src: docker-setup.sh
     dest: /home/docker/docker-registry/docker-setup.sh
-    state: directory
     owner: docker
     group: docker
     mode: '0755'
