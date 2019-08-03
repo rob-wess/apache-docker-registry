@@ -19,8 +19,6 @@
 source $script_dir/scripts/questions.sh
 export subj=$subj
 sudo -E $script_dir/scripts/create_certs.sh
-exit
-
 
 function Print-Message () 
 	{
@@ -87,7 +85,7 @@ function Check-Host ()
 	
 function Unpack-Tars ()
 	{
-		tput bold; echo -e \\n"Untar Needed Files"\\n; tput sgr0
+		tput bold; echo -e \\n"Untar Docker Images"\\n; tput sgr0
 		
 		message="Untar registry_image.tar.gz"
 		len=$(echo $message | wc -c)
@@ -128,7 +126,7 @@ function Install-Docker ()
 	{
 		tput bold; echo -e \\n"Run install_docker.yml Plays"\\n; tput sgr0
 		tags=(create_install_directory copy_installers install_docker-compose install_docker_ce start_docker_daemon create_docker_user update_user_paths)
-
+		
 		for tag in "${tags[@]}"; do
 			message="Run ansible play $tag"
 			len=$(echo $message | wc -c)
@@ -151,9 +149,8 @@ function Deploy-Registry ()
 	{
 
 		tput bold; echo -e \\n"Run deploy_secure_registry.yml Plays"\\n; tput sgr0
+		
 		tags=(install_apcache_tools make_data_dir copy_docker_images load_registry_image load_apache_image copy_setup_script update_host_file update_selinux apply_selinux_rules)
-
-
 		for tag in "${tags[@]}"; do
 			message="Run ansible play $tag"
 			len=$(echo $message | wc -c)
@@ -219,9 +216,7 @@ if [[ "$host_status" == "prepped" ]]; then
 	echo -e \\n"The system is ready for installation and deployment of the secured registry container."\\n
 	tput sgr0
 	read -p "Press enter to continue or Ctrl+c to exit"
-	$script_dir/scripts/questions.sh
-	exit
-	Deploy-Registry
+		Deploy-Registry
 else
 	tput bold; tput setaf 1; tput smul
 	echo -e \\n"Host does not have all pre-reqs installed"
@@ -230,21 +225,12 @@ else
 	tput sgr0
 	echo -e \\n"We'll call the installer scripts now"\\n
 	read -p "Press enter to continue or Ctrl+c to exit"
-	
-		$script_dir/scripts/questions.sh
-		exit
 		$script_dir/scripts/install_prereqs.sh
-		#Install-Docker
-		#Deploy-Registry
-	
+		Install-Docker
+		Deploy-Registry
 fi
 
-
 exit
-
-# Call the openssl function 
-Call-Openssl
-
 # Call the Container-Setup function
 Container-Setup
 

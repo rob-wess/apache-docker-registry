@@ -1,6 +1,7 @@
 - name: Install packages for added security
   yum:
     name: httpd-tools
+  tags: install_apcache_tools
 
 - name: Create Directory for http
   file:
@@ -27,20 +28,15 @@
 
 - name: Make data directory
   file:
-    path: /data
-    state: directory
-    owner: docker
-    group: docker
-    mode: '0655'
-  file:
     path: "{{ item }}"
     state: directory
     owner: docker
     group: docker
-    mode: '0755'
+    mode: '0655'
   loop:
     - /data/images
     - /home/docker/docker-registry/
+  tags: make_data_dir
 
 - name: Copy docker images to remote machine
   copy:
@@ -52,21 +48,24 @@
   loop:
     - httpd_offline.tar
     - registry_offline.tar
+  tags: copy_docker_images
 
 - name: Load registry image
   shell: docker load --input /data/images/registry_offline.tar
+  tags: load_registry_image
 
 - name: Load apache image
   shell: docker load --input /data/images/httpd_offline.tar
-
+  tags: load_apache_image
+  
 - name: Copy docker-setup script to machine
   copy:
     src: docker-setup.sh
     dest: /home/docker/docker-registry/docker-setup.sh
-    state: directory
     owner: docker
     group: docker
     mode: '0755'
+  tags: copy_setup_script
 
 - name: Update the local host file
   lineinfile:
@@ -76,13 +75,16 @@
     owner: root
     group: root
     mode: '0644' 
+  tags: update_host_file
 
 - name: Add selinux rule
   sefcontext:
     target: '/home/docker/docker-registry/data(/.*)?'
     setype: httpd_config_t
     state: present
+  tags: update_selinux
 
 - name: Apply rule
   command: restorecon -irv /home/docker/docker-registry/data/
+  tags: apply_selinux_rules
     
