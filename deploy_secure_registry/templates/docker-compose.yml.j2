@@ -1,0 +1,16 @@
+apache:
+  image: "httpd:2.4"
+  hostname: {{ registry_fqdn }}
+  ports:
+    - 5043:5043
+  links:
+    - registry:registry
+  volumes:
+    - `pwd`/auth:/usr/local/apache2/conf
+
+registry:
+  image: registry:2
+  ports:
+    - 127.0.0.1:5000:5000
+  volumes:
+    - `pwd`/data:/var/lib/registry
