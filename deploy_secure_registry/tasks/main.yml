@@ -13,6 +13,9 @@
   loop:
     - /data/images
     - /home/docker/docker-registry/
+    - /home/docker/docker-registry/auth
+    - /home/docker/docker-registry/data
+    
   tags: make_data_dir
 
 - name: Copy docker images to remote machine
@@ -35,15 +38,24 @@
   shell: docker load --input /data/images/httpd_offline.tar
   tags: load_apache_image
   
-- name: Copy docker-setup script to machine
-  copy:
-    src: docker-setup.sh
-    dest: /home/docker/docker-registry/docker-setup.sh
+- name: Copy apache configuration template to remote machine
+  tepmlate:
+    src: httpd.conf.j2
+    dest: /home/docker/docker-registry/auth/httpd.conf
     owner: docker
     group: docker
     mode: '0755'
-  tags: copy_setup_script
+  tags: copy_apache_template
 
+- name: Copy docker-compose template to remote machine
+  template:
+    src: docker-compose.yml.j2
+    dest: /home/docker/docker-registry/docker-compose.yml
+    owner: docker
+    group: docker
+    mode: '0644'
+  tags: copy_docker_compose_template
+    
 - name: Update the local host file
   lineinfile:
     path: /etc/hosts
