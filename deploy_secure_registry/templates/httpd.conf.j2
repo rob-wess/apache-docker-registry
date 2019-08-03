@@ -45,7 +45,7 @@ Listen 5043
 
 <VirtualHost *:5043>
 
-  ServerName {{ registry_domain_name }}
+  ServerName {{ registry_fqdn }}
   SSLEngine on
   SSLCertificateFile /usr/local/apache2/conf/domain.crt
   SSLCertificateKeyFile /usr/local/apache2/conf/domain.key
