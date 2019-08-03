@@ -9,3 +9,5 @@ After the installer runs, the user still needs to su to docker, cd into the home
 
 They will also need to test authentication by running 'docker login {{ registry_fqdn }}:5043 with the apache username/password. 
 The httpd.conf also requires a group named 'developer' to push/put/delete/patch but there is no script/play to create the apache gorup file. 
+
+Currently, getting authentication failure when loggin in. Probably just an apache config issue. Don't know enough about apache basic auth. 
