@@ -125,7 +125,7 @@ function Call-Openssl ()
 function Install-Docker ()
 	{
 		tput bold; echo -e \\n"Run install_docker.yml Plays"\\n; tput sgr0
-		tags=(install_apcache_tools make_data_dir copy_docker_images load_registry_image load_apache_image copy_setup_script update_host_file update_selinux apply_selinux_rules)
+		tags=(create_install_directory copy_installers install_docker-compose install_docker_ce start_docker_daemon create_docker_user update_user_paths)
 		
 		for tag in "${tags[@]}"; do
 			message="Run ansible play $tag"
@@ -149,8 +149,8 @@ function Deploy-Registry ()
 	{
 
 		tput bold; echo -e \\n"Run deploy_secure_registry.yml Plays"\\n; tput sgr0
-		tags=(create_install_directory copy_installers install_docker-compose install_docker_ce start_docker_daemon create_docker_user update_user_paths)
-
+		
+		tags=(install_apcache_tools make_data_dir copy_docker_images load_registry_image load_apache_image copy_setup_script update_host_file update_selinux apply_selinux_rules)
 		for tag in "${tags[@]}"; do
 			message="Run ansible play $tag"
 			len=$(echo $message | wc -c)
