@@ -21,6 +21,12 @@ echo -e \\n
 sed -i "s(REGISTRY_FQDN("$REGISTRY_FQDN"(g" $script_dir/deploy_secure_registry.yml
 
 
+echo "Enter a username and password for an apache user. This will be used to log into the registry"
+read -p "Enter apache admin username:  " APACHE_USER
+read -sp "Enter apache admin users password:  " APACHE_PASSWORD
+echo -e \\n
+sed -i "s(APACHE_USER($APACHE_USER(g" $scirpt_dir/deploy_secure_registry.yml
+sed -i "s(APACHE_PASSWORD($APACHE_PASSWORD(g" $scirpt_dir/deploy_secure_registry.yml
 
 echo -e "Now we need some infromation for the self-signed certs. Please answer each prompt"
 
