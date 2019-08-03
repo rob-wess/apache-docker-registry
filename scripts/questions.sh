@@ -16,9 +16,9 @@ sed -i "s(REGISTRY_IP("$REGISTRY_IP"(g" $script_dir/deploy_secure_registry.yml
 
 
 echo "Enter the fqdn of your reigstry server (can be something like localhost.local. This will be placed in the local hostfile"
-read -p "Enter the FQDN of your registry:  " REGISTRY_HOSTNAME
+read -p "Enter the FQDN of your registry:  " REGISTRY_FQDN
 echo -e \\n
-sed -i "s(REGISTRY_HOSTNAME("$REGISTRY_HOSTNAME"(g" $script_dir/deploy_secure_registry.yml
+sed -i "s(REGISTRY_FQDN("$REGISTRY_FQDN"(g" $script_dir/deploy_secure_registry.yml
 
 
 
