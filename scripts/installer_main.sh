@@ -197,17 +197,12 @@ function Fail-Exit ()
 echo > $fail_log
 clear
 echo -e \\n
-#read -sp "Please enter the ansible user password:  " PASSWORD
-echo -e \\n
 export PASSWORD=$PASSWORD
-#sed -i "s(SUDO_PASSWORD("$PASSWORD"(g" $script_dir/install_docker.yml
-#sudo echo ""
-
 
 #Unpack tar files
 Unpack-Tars
 
-#Run the Check-Host function and exit if any fails
+#Run the Check-Host function
 Check-Host 
 if [[ "$host_status" == "prepped" ]]; then
 	tput bold; tput setaf 2; tput smul
@@ -231,9 +226,11 @@ else
 fi
 
 exit
+
+## NOT TESTED
 # Call the Container-Setup function
-Container-Setup
+#Container-Setup
 
 # Call the Docker-Compose function
-Docker-Compose
+#Docker-Compose
 
