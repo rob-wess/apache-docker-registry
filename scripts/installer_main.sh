@@ -118,7 +118,8 @@ function Unpack-Tars ()
 function Call-Openssl ()
 	{
 		
-		sudo -S $PASSWORD /home/ansible/registry-maker/scripts/create_certs.sh
+		#sudo -S $PASSWORD /home/ansible/registry-maker/scripts/create_certs.sh
+		sudo -S $PASSWORD $script_dir/scripts/create_certs.sh
 	}
 
 
