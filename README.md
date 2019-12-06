@@ -1,6 +1,6 @@
 # apache-docker-registry
 
-TESTED ONLY ON Cento 7.6.1810
+TESTED ONLY ON Centos 7.6.1810
 
 - REFERENCES:
   - https://www.digitalocean.com/community/tutorials/how-to-set-up-a-private-docker-registry-on-ubuntu-14-04
@@ -21,7 +21,7 @@ This repo is designed to be used on an offline system. The repo contains all of 
   - Answer the questions and wait for the install to finish
   - After installation, switch user to 'docker' and cd into /home/docker/docker-registry/. (May need to change permissions on the directory)
   - Run 'docker-compose up' to start containers. Add -d option to start them detached.
-  - Run 'docker login $registry_fqdn:5043' to test. 
+  - Run 'docker login $registry_fqdn:5000' to test. 
   
   It is recommended to change the ansible user's password after installation. This is echoed into multiple files in plain text. 
   
