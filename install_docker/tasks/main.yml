@@ -53,7 +53,19 @@
     groups: docker
     append: yes
   tags: create_docker_user
+  
+- name: Copy /etc/skel/ to docker directory
+  shell: cp /etc/skel/.bash* /home/docker/
+  shell: etc_skel
 
+- name: Chown Docker user's home directory
+  shell: chown -R docker:docker /home/docker/
+  tags: docker_chown
+
+- name: Chmod Docker user's home directory
+  shell: chmod -R 700 /home/docker/
+  tags: docker_chmod
+  
 - name: Update user paths
   copy:
     src: docker-compose.sh
