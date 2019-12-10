@@ -127,7 +127,7 @@ function Call-Openssl ()
 function Install-Docker ()
 	{
 		tput bold; echo -e \\n"Run install_docker.yml Plays"\\n; tput sgr0
-		tags=(create_install_directory copy_installers install_docker-compose install_docker_ce start_docker_daemon create_docker_user update_user_paths)
+		tags=(create_install_directory copy_installers install_docker-compose install_docker_ce start_docker_daemon create_docker_user etc_skel docker_chown docker_chmod update_user_paths)
 		
 		for tag in "${tags[@]}"; do
 			message="Run ansible play $tag"
