@@ -3,7 +3,7 @@
 
 
 # Formatting variables
-	export damon=$(systemctl list-unit-files | grep enabled | head -n 1 | awk '{print $1}')
+	#export damon=$(systemctl list-unit-files | grep enabled | head -n 1 | awk '{print $1}')
 	#export dot=$(systemctl status $damon | head -n 1  | cut -d " " -f 1)
 	export dot=$(echo -e "\u25CF")
 	export wid=$(tput cols)
